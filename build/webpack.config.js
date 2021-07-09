@@ -1,4 +1,4 @@
-const config = require('./webpack.admin.config');
+const config = require('./webpack.config.base');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const { resolve } = require('path');

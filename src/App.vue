@@ -42,62 +42,42 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light.mb-3
 router-view
 </template>
 
-<script>
+<script setup>
 import {
   ref,
   onBeforeMount,
 } from 'vue';
 import { useStore } from 'vuex';
-import { GET_DATA } from './store';
 import { publish } from '@/service';
 
-export default {
-  setup() {
-    async function doPublish() {
-      if (isLoading.value) {
-        return;
-      }
-      isPublishing.value = true;
-      message.value = status.value = null;
-      try {
-        const { cases, lang } = store.state;
-        let offset = 0;
-        await publish({ cases, lang }, ({ target: xhr }) => {
-          const { responseText } = xhr;
-          const chunk = responseText.substring(offset);
-          offset = responseText.length;
-          currentStatus.value = chunk;
-        });
-        status.value = true;
-        currentStatus.value = '';
-        message.value = 'Published successfully.';
-      } catch (e) {
-        message.value = 'Failed to publish. ' + e.message;
-      }
-      isPublishing.value = false;
-    }
-
-    const isLoading = ref(true);
-    const isPublishing = ref(false);
-    const status = ref(false);
-    const currentStatus = ref('');
-    const message = ref('');
-    const store = useStore();
-
-    onBeforeMount(async() => {
-      await store.dispatch(GET_DATA);
-      isLoading.value = false;
+async function doPublish() {
+  if (isLoading.value) {
+    return;
+  }
+  isPublishing.value = true;
+  message.value = status.value = null;
+  try {
+    const { cases, lang } = store.state;
+    let offset = 0;
+    await publish({ cases, lang }, ({ target: xhr }) => {
+      const { responseText } = xhr;
+      const chunk = responseText.substring(offset);
+      offset = responseText.length;
+      currentStatus.value = chunk;
     });
+    status.value = true;
+    currentStatus.value = '';
+    message.value = 'Published successfully.';
+  } catch (e) {
+    message.value = 'Failed to publish. ' + e.message;
+  }
+  isPublishing.value = false;
+}
 
-    return {
-      isLoading,
-      isPublishing,
-      status,
-      message,
-      currentStatus,
-
-      doPublish,
-    };
-  },
-};
+const isLoading = ref(true);
+const isPublishing = ref(false);
+const status = ref(false);
+const currentStatus = ref('');
+const message = ref('');
+const store = useStore();
 </script>

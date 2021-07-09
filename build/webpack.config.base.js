@@ -7,7 +7,7 @@ const isDevServer = process.env.WEBPACK_DEV_SERVER;
 
 const config = {
   entry: {
-    index: resolve(__dirname, '../src/admin/main.js'),
+    index: resolve(__dirname, '../src/main.js'),
   },
   module: {
     rules: [
@@ -82,17 +82,15 @@ const config = {
       isDevServer,
     }),
     new IgnorePlugin(/^\.\/locale$/, /moment$/),
-    new HtmlWebpackPlugin({
-      template: resolve(__dirname, '../src/template/admin.pug'),
-    }),
+    new HtmlWebpackPlugin(),
     new MiniCSSExtractPlugin({
       filename: 'style.css',
     }),
   ],
   devServer: {
-    port: 8081,
+    port: 9010,
     proxy: {
-      '/data': 'http://localhost:8080',
+      '/api': 'http://localhost:9020',
     },
   },
 };
